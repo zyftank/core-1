@@ -52,10 +52,10 @@ if(BUILDING_IN_SOURCE)
 endif()
 
 if(WIN32)
-  if(NOT MSVC)
-    message(FATAL_ERROR "Under Windows other compiler than Microsoft Visual Studio are not supported.")
-  elseif(MSVC_VERSION LESS 1900)
-    message(FATAL_ERROR "Only Visual Studio 2015 or newer is supported")
+  if(MSVC)
+    if(MSVC_VERSION LESS 1900)
+      message(FATAL_ERROR "Only Visual Studio 2015 or newer is supported")
+    endif()
   endif()
   
   # Added by Giperion, in WIN32 output all compiled files in one directory
@@ -193,6 +193,9 @@ if(WIN32)
   set(OPENSSL_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/dep/include/openssl)
   set(OPENSSL_LIBRARIES ${CMAKE_SOURCE_DIR}/dep/lib/${DEP_ARCH}_release/libeay32.lib)
   set(OPENSSL_DEBUG_LIBRARIES ${CMAKE_SOURCE_DIR}/dep/lib/${DEP_ARCH}_debug/libeay32.lib)
+  if(NOT MSVC)
+    set(MINGW_THREADS_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/dep/include/mingw-threads)
+  endif()
   # zlib is build
 endif()
 

@@ -146,6 +146,12 @@ class ByteBuffer
             return *this;
         }
 
+        ByteBuffer &operator<<(time_t value)
+        {
+            append<time_t>(value);
+            return *this;
+        }
+
         // floating points
         ByteBuffer &operator<<(float value)
         {
@@ -231,6 +237,12 @@ class ByteBuffer
         ByteBuffer &operator>>(int64 &value)
         {
             value = read<int64>();
+            return *this;
+        }
+
+        ByteBuffer &operator>>(time_t &value)
+        {
+            value = read<time_t>();
             return *this;
         }
 
@@ -369,7 +381,7 @@ class ByteBuffer
             append((uint8 const*)str.c_str(), str.size() + 1);
         }
 
-        void append(const std::vector<uint8>& src) 
+        void append(const std::vector<uint8>& src)
         {
             return append(src.data(), src.size());
         }

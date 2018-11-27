@@ -141,7 +141,7 @@ namespace MaNGOS
         Creature &i_creature;
         CreatureRelocationNotifier(Creature &c) : i_creature(c) {}
         template<class T> void Visit(GridRefManager<T> &) {}
-        #ifdef WIN32
+        #ifdef _MSC_VER
         template<> void Visit(PlayerMapType &);
         #endif
     };
@@ -160,7 +160,7 @@ namespace MaNGOS
         }
 
         template<class T> inline void Visit(GridRefManager<T>  &) {}
-        #ifdef WIN32
+        #ifdef _MSC_VER
         template<> inline void Visit<Player>(PlayerMapType &);
         template<> inline void Visit<Creature>(CreatureMapType &);
         #endif
@@ -742,7 +742,7 @@ namespace MaNGOS
                 {
                     if (i_percent)
                         return 100 - u->GetHealthPercent() > i_hp;
-                    
+
                     return u->GetMaxHealth() - u->GetHealth() > i_hp;
                 }
 
@@ -1302,7 +1302,7 @@ namespace MaNGOS
     class AllCreaturesMatchingOneEntryInRange
     {
     public:
-        AllCreaturesMatchingOneEntryInRange(const WorldObject* pObject, const std::vector<uint32>& entries, float fMaxRange) 
+        AllCreaturesMatchingOneEntryInRange(const WorldObject* pObject, const std::vector<uint32>& entries, float fMaxRange)
             : m_pObject(pObject), entries(entries), m_fRange(fMaxRange) {}
         bool operator() (Unit* pUnit)
         {

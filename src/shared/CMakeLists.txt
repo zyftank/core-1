@@ -106,13 +106,23 @@ endif()
 
 # Exclude Win32 files
 if(WIN32)
-  list(REMOVE_ITEM shared_SRCS
-    PosixDaemon.h
-    PosixDaemon.cpp
-    revision.h
-    migrations_list.h
-  )
-  
+  if(MSVC)
+    list(REMOVE_ITEM shared_SRCS
+      PosixDaemon.h
+      PosixDaemon.cpp
+      revision.h
+      migrations_list.h
+    )
+  else()
+    list(REMOVE_ITEM shared_SRCS
+      WheatyExceptionReport.cpp
+      WheatyExceptionReport.h
+      PosixDaemon.h
+      PosixDaemon.cpp
+      revision.h
+      migrations_list.h
+    )
+  endif()
   set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /D__ACE_INLINE__")
 else()
   list(REMOVE_ITEM shared_SRCS
@@ -156,6 +166,14 @@ include_directories(
   ${ACE_INCLUDE_DIR}
   ${MYSQL_INCLUDE_DIR}
 )
+
+if(WIN32)
+  if(NOT MSVC)
+    include_directories(
+      ${MINGW_THREADS_INCLUDE_DIR}
+    )
+  endif()
+endif()
 
 add_library(shared STATIC
   ${shared_SRCS}

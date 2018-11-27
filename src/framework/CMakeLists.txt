@@ -91,6 +91,14 @@ include_directories(
   ${CMAKE_SOURCE_DIR}/src/shared
 )
 
+if(WIN32)
+  if(NOT MSVC)
+    include_directories(
+      ${MINGW_THREADS_INCLUDE_DIR}
+    )
+  endif()
+endif()
+
 add_library(framework STATIC
   ${framework_SRCS}
 )

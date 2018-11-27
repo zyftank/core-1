@@ -1098,13 +1098,13 @@ void Spell::DoAllEffectOnTarget(TargetInfo *target)
     uint32 procAttacker = m_procAttacker;
     uint32 procVictim   = m_procVictim;
     uint32 procEx       = PROC_EX_NONE;
-    
+
     // Drop some attacker proc flags if this is a secondary target. Do not need to change
     // the victim proc flags.
     if (m_targetNum > 1) {
         // If this is a melee spell hit, strip the flag and apply a spell hit flag instead.
-        // This is required to proc things like Deep Wounds on the victim when hitting 
-        // multiple targets, but not proc additional melee-only beneficial auras on the 
+        // This is required to proc things like Deep Wounds on the victim when hitting
+        // multiple targets, but not proc additional melee-only beneficial auras on the
         // attacker like Sweeping Strikes. Leave the victim proc flags responding to a melee
         // spell.
         if (procAttacker & PROC_FLAG_SUCCESSFUL_MELEE_SPELL_HIT) {
@@ -1116,11 +1116,11 @@ void Spell::DoAllEffectOnTarget(TargetInfo *target)
             // proccing beneficial auras multiple times. Also remove negative spell hit for
             // chain lightning + clearcasting. Leave positive effects
             // eg. Chain heal/lightning & Zandalarian Hero Charm
-            procAttacker &= ~(PROC_FLAG_SUCCESSFUL_SPELL_CAST | PROC_FLAG_SUCCESSFUL_MANA_SPELL_CAST | 
+            procAttacker &= ~(PROC_FLAG_SUCCESSFUL_SPELL_CAST | PROC_FLAG_SUCCESSFUL_MANA_SPELL_CAST |
                               PROC_FLAG_SUCCESSFUL_NEGATIVE_SPELL_HIT);
         }
         else if (procAttacker & (PROC_FLAG_SUCCESSFUL_AOE | PROC_FLAG_SUCCESSFUL_NEGATIVE_SPELL_HIT)) {
-            // Do not allow secondary hits for negative aoe spells (such as Arcane Explosion) 
+            // Do not allow secondary hits for negative aoe spells (such as Arcane Explosion)
             // to proc beneficial abilities such as Clearcasting. Positive aoe spells can
             // still trigger, as in the case of prayer of healing and inspiration...
             procAttacker &= ~(PROC_FLAG_SUCCESSFUL_AOE | PROC_FLAG_SUCCESSFUL_NEGATIVE_SPELL_HIT);
@@ -1186,7 +1186,7 @@ void Spell::DoAllEffectOnTarget(TargetInfo *target)
                             unit->AddThreat(real_caster);
                             unit->SetInCombatWithAggressor(real_caster);
                         }
-                        
+
                         real_caster->SetInCombatWithVictim(unit);
                     }
                     else if (m_spellInfo->HasAttribute(SPELL_ATTR_EX3_OUT_OF_COMBAT_ATTACK))
@@ -1271,7 +1271,7 @@ void Spell::DoAllEffectOnTarget(TargetInfo *target)
         damageInfo.spell = this;
 
         // World of Warcraft Client Patch 1.11.0 (2006-06-20)
-        // - Fear: The calculations to determine if Fear effects should break due 
+        // - Fear: The calculations to determine if Fear effects should break due
         //   to receiving damage have been changed.The old calculation used the
         //   base damage of the ability.The new calculation uses the final amount
         //   of damage dealt, after all modifiers.
@@ -1296,7 +1296,7 @@ void Spell::DoAllEffectOnTarget(TargetInfo *target)
         m_absorbed = damageInfo.absorb;
 
         caster->DealDamageMods(damageInfo.target, damageInfo.damage, &damageInfo.absorb);
-        
+
         // terribly ugly hack for Gluth Decimate to not be affected by any damage modifiers.
         // SPELL_ATTR_EX3_UNK29 is probably meant to make the spell ignore any damage modifiers,
         // but until implemented, this is the best we can do.
@@ -1316,7 +1316,7 @@ void Spell::DoAllEffectOnTarget(TargetInfo *target)
         if (m_CastItem && m_caster->getClass() == CLASS_PALADIN && (procEx & PROC_EX_CRITICAL_HIT) && !(m_spellInfo->AttributesEx3 & SPELL_ATTR_EX3_CANT_TRIGGER_PROC))
             m_canTrigger = true;
         // JoR and JoC: Paladin melee spells trigger melee procs instead of magic
-        if ((m_spellInfo->IsFitToFamilyMask<CF_PALADIN_JUDGEMENT_OF_RIGHTEOUSNESS>() && m_spellInfo->SpellIconID == 25) || 
+        if ((m_spellInfo->IsFitToFamilyMask<CF_PALADIN_JUDGEMENT_OF_RIGHTEOUSNESS>() && m_spellInfo->SpellIconID == 25) ||
             (m_spellInfo->SpellFamilyName == SPELLFAMILY_PALADIN && m_spellInfo->SpellIconID == 561 && m_spellInfo->SpellVisual == 0))
         {
             procAttacker = PROC_FLAG_SUCCESSFUL_MELEE_SPELL_HIT;
@@ -1325,7 +1325,7 @@ void Spell::DoAllEffectOnTarget(TargetInfo *target)
         // Do triggers for unit (reflect triggers passed on hit phase for correct drop charge)
         if (m_canTrigger)
             caster->ProcDamageAndSpell(unitTarget, real_caster ? procAttacker : PROC_FLAG_NONE, procVictim, procEx, damageInfo.damage, m_attackType, m_spellInfo, this);
-        
+
         if (m_caster->GetTypeId() == TYPEID_PLAYER)
         {
             // trigger weapon enchants for weapon based spells; exclude spells that stop attack, because may break CC
@@ -1453,9 +1453,9 @@ void Spell::DoAllEffectOnTarget(TargetInfo *target)
             if (Player* p = real_caster->GetCharmerOrOwnerPlayerOrPlayerItself())
                 p->RewardPlayerAndGroupAtCast(unit, m_spellInfo->Id);
 
-        if (((Creature*)unit)->AI())    
+        if (((Creature*)unit)->AI())
             ((Creature*)unit)->AI()->SpellHit(m_caster, m_spellInfo);
-        
+
         if (ZoneScript* pZoneScript = unit->GetZoneScript()) {
             pZoneScript->OnCreatureSpellHit(m_caster, unit->ToCreature(), m_spellInfo);
         }
@@ -2215,7 +2215,7 @@ void Spell::SetTargetMap(SpellEffectIndex effIndex, uint32 targetMode, UnitList&
                 UnitList tempTargetUnitMap;
 
                 // World of Warcraft Client Patch 1.11.0 (2006-06-20)
-                // - Chain targeted spells and abilities (e.g. Multi-shot, Cleave, Chain 
+                // - Chain targeted spells and abilities (e.g. Multi-shot, Cleave, Chain
                 //   Lightning) will no longer land if target cannot be seen by the caster
                 //   due to stealth or invisibility.
 #if SUPPORTED_CLIENT_BUILD > CLIENT_BUILD_1_10_2
@@ -2402,7 +2402,7 @@ void Spell::SetTargetMap(SpellEffectIndex effIndex, uint32 targetMode, UnitList&
         }
         case TARGET_AREAEFFECT_GO_AROUND_SOURCE:
             // Despawn Ice Block (sapphiron)
-            if (m_spellInfo->Id == 30132) 
+            if (m_spellInfo->Id == 30132)
             {
                 float x, y, z;
                 m_caster->GetPosition(x, y, z);
@@ -2411,7 +2411,7 @@ void Spell::SetTargetMap(SpellEffectIndex effIndex, uint32 targetMode, UnitList&
                 MaNGOS::GameObjectEntryInPosRangeCheck go_check(*m_caster, 181247/*Ice BLock*/, x , y, z, radius);
                 MaNGOS::GameObjectListSearcher<MaNGOS::GameObjectEntryInPosRangeCheck> checker(tempTargetGOList, go_check);
                 Cell::VisitGridObjects(m_caster, checker, radius);
-                
+
                 if (!tempTargetGOList.empty())
                 {
                     for (std::list<GameObject*>::iterator iter = tempTargetGOList.begin(); iter != tempTargetGOList.end(); ++iter)
@@ -2638,18 +2638,18 @@ void Spell::SetTargetMap(SpellEffectIndex effIndex, uint32 targetMode, UnitList&
                     }
 
                     if (m_caster->HasInArc(arc, *itr, angle))
-                        targetUnitMap.push_back(*itr);                
+                        targetUnitMap.push_back(*itr);
                 }
 
                 break;
-            }                
+            }
             default:
                 FillAreaTargets(targetUnitMap, radius, PUSH_IN_FRONT_90, SPELL_TARGETS_AOE_DAMAGE);
                 break;
             }
 
             break;
-        }            
+        }
         case TARGET_NARROW_FRONTAL_CONE:
             FillAreaTargets(targetUnitMap, radius, PUSH_IN_FRONT_15, SPELL_TARGETS_AOE_DAMAGE);
             break;
@@ -2873,10 +2873,10 @@ void Spell::SetTargetMap(SpellEffectIndex effIndex, uint32 targetMode, UnitList&
         case TARGET_DYNAMIC_OBJECT_LEFT_SIDE:
         case TARGET_DYNAMIC_OBJECT_RIGHT_SIDE:
         case TARGET_MINION:
-        {     
+        {
             if (targetMode == TARGET_MINION && m_spellInfo->Effect[effIndex] == SPELL_EFFECT_DUEL)
                 break;
-        
+
             if (!(m_targets.m_targetMask & TARGET_FLAG_DEST_LOCATION))
             {
                 // General override, we don't want to use max spell range here.
@@ -2914,7 +2914,7 @@ void Spell::SetTargetMap(SpellEffectIndex effIndex, uint32 targetMode, UnitList&
                         m_caster->GetPosition(x, y, z);
 
                 m_targets.setDestination(x, y, z);
-            }                
+            }
 
             targetUnitMap.push_back(m_caster);
             break;
@@ -3090,10 +3090,10 @@ void Spell::SetTargetMap(SpellEffectIndex effIndex, uint32 targetMode, UnitList&
         case TARGET_DEST_CASTER_FRONT_LEAP:
         {
             Unit* pUnitTarget = m_targets.getUnitTarget();
-            
+
             if (!pUnitTarget)
                 break;
-            
+
             float dis = GetSpellRadius(sSpellRadiusStore.LookupEntry(m_spellInfo->EffectRadiusIndex[effIndex]));
             float x, y, z;
             float srcX, srcY, srcZ;
@@ -3133,7 +3133,7 @@ void Spell::SetTargetMap(SpellEffectIndex effIndex, uint32 targetMode, UnitList&
                 y = srcY;
                 z = srcZ;
             }
-             
+
             m_targets.setDestination(x, y, z);
         }
         default:
@@ -3199,7 +3199,7 @@ SpellCastResult Spell::prepare(Aura* triggeredByAura, uint32 chance)
 {
 
     m_spellState = SPELL_STATE_PREPARING;
-    m_delayed = m_spellInfo->speed > 0.0f 
+    m_delayed = m_spellInfo->speed > 0.0f
         || (m_spellInfo->IsCCSpell() && m_targets.getUnitTarget() && m_targets.getUnitTarget()->IsPlayer());
 
     if (m_caster->GetTransport())
@@ -3282,7 +3282,7 @@ SpellCastResult Spell::prepare(Aura* triggeredByAura, uint32 chance)
             {
                 finish(false);
                 return SPELL_FAILED_TRY_AGAIN;
-            } 
+            }
         }
 
         // Prepare data for triggers
@@ -3304,7 +3304,7 @@ SpellCastResult Spell::prepare(Aura* triggeredByAura, uint32 chance)
         // Cast completion will remove all any stealth/invis auras
         if (m_timer) {
             RemoveStealthAuras();
-            
+
             // If using a game object we need to remove any remaining invis auras. Should only
             // ever be Gnomish Cloaking Device, since it's a special case and not removed on
             // opcode receive
@@ -3624,7 +3624,7 @@ void Spell::cast(bool skipCheck)
     // Remove any remaining invis auras on cast completion, should only be gnomish cloaking device
     if (!m_IsTriggeredSpell)
         m_caster->RemoveAurasWithInterruptFlags(AURA_INTERRUPT_FLAG_ON_CAST_SPELL);
-    
+
     SendSpellCooldown();
 
     TakePower();
@@ -4029,7 +4029,7 @@ void Spell::update(uint32 difftime)
                     {
                         Unit *target = m_targets.getUnitTarget();
                         sLog.outError("[Spell] - Channeled update still maintains ref to deleted holder, caster: %s. Target: %s",
-                            m_caster->GetGuidStr().c_str(), 
+                            m_caster->GetGuidStr().c_str(),
                             target ? target->GetGuidStr().c_str() : "");
 
                         // TODO: Is this a leak if we don't delete it here? Unit probably removed from world
@@ -4947,7 +4947,7 @@ void Spell::TakeAmmo()
         case 23577: // Expose Weakness
             return;
     }
-            
+
     if (m_attackType == RANGED_ATTACK && m_caster->GetTypeId() == TYPEID_PLAYER)
     {
         Item *pItem = ((Player*)m_caster)->GetWeaponForAttack(RANGED_ATTACK, true, false);
@@ -5165,7 +5165,7 @@ SpellCastResult Spell::CheckCast(bool strict)
     // Prevent casting while sitting unless the spell allows it
     if (!m_IsTriggeredSpell && m_caster->IsSitState() && !(m_spellInfo->Attributes & SPELL_ATTR_CASTABLE_WHILE_SITTING))
         return SPELL_FAILED_NOT_STANDING;
-    
+
     /*  Check cooldowns to prevent cheating (ignore passive spells, that client side visual only)
 
         If the cast is an item cast, check the spell proto on the item for the category
@@ -5299,7 +5299,7 @@ SpellCastResult Spell::CheckCast(bool strict)
             case 25860:
                 if (!m_caster->HasAuraType(SPELL_AURA_MOUNTED))
                     return SPELL_FAILED_ONLY_MOUNTED;
-                break; 
+                break;
         }
 
         // Loatheb Corrupted Mind spell failed
@@ -5574,10 +5574,10 @@ SpellCastResult Spell::CheckCast(bool strict)
             }
         }
     }
-    
+
     // Nostalrius: impossible to cast spells while banned / feared / confused ...
     // Except divine shields, pvp trinkets for example
-    // Stoneform is explicitly excluded, it should be allowed to cast always 
+    // Stoneform is explicitly excluded, it should be allowed to cast always
     // TODO: This condition allows an antifear item to be used while stuned for example.
     if (!m_IsTriggeredSpell && !IsSpellAppliesAura(m_spellInfo, SPELL_AURA_SCHOOL_IMMUNITY) && !IsSpellAppliesAura(m_spellInfo, SPELL_AURA_MECHANIC_IMMUNITY) &&
          m_spellInfo->Id != 20594 && // Stoneform
@@ -5752,7 +5752,7 @@ SpellCastResult Spell::CheckCast(bool strict)
                             if (m_spellInfo->Id == 16053 && creatureScriptTarget->GetHealthPercent() < 11)
                                 m_targets.setUnitTarget(creatureScriptTarget);
 
-                            AddUnitTarget(creatureScriptTarget, SpellEffectIndex(j));                            
+                            AddUnitTarget(creatureScriptTarget, SpellEffectIndex(j));
                         }
                     }
                 }
@@ -5828,7 +5828,7 @@ SpellCastResult Spell::CheckCast(bool strict)
 
         if (!m_targets.getUnitTarget()->HasAuraState(AURA_STATE_HEALTHLESS_20_PERCENT))
             return SPELL_FAILED_BAD_TARGETS;
-    }   
+    }
 
     for (int i = 0; i < MAX_EFFECT_INDEX; ++i)
     {
@@ -6166,7 +6166,7 @@ SpellCastResult Spell::CheckCast(bool strict)
 
                 // chance for fail at orange mining/herb/LockPicking gathering attempt
                 // second check prevent fail at rechecks
-                if ((skillId == SKILL_HERBALISM || skillId == SKILL_MINING || skillId == SKILL_LOCKPICKING) 
+                if ((skillId == SKILL_HERBALISM || skillId == SKILL_MINING || skillId == SKILL_LOCKPICKING)
                     && (m_selfContainer && (*m_selfContainer) == this))
                 {
                     bool canFailAtMax = skillId != SKILL_HERBALISM && skillId != SKILL_MINING;
@@ -6180,7 +6180,7 @@ SpellCastResult Spell::CheckCast(bool strict)
             case SPELL_EFFECT_ACTIVATE_OBJECT:
             {
                 if (m_spellInfo->Id == 15958)
-                { 
+                {
                     if (m_UniqueGOTargetInfo.size())
                     {
                         ObjectGuid eggGuid = m_UniqueGOTargetInfo.back().targetGUID;
@@ -6582,7 +6582,7 @@ SpellCastResult Spell::CheckCast(bool strict)
             }
             case SPELL_AURA_PERIODIC_MANA_LEECH:
             {
-                if (!m_targets.getUnitTarget() && 
+                if (!m_targets.getUnitTarget() &&
                         !IsAreaEffectTarget(Targets(m_spellInfo->EffectImplicitTargetA[i])) &&
                         !IsAreaEffectTarget(Targets(m_spellInfo->EffectImplicitTargetB[i])))
                     return SPELL_FAILED_BAD_IMPLICIT_TARGETS;
@@ -6795,7 +6795,7 @@ SpellCastResult Spell::CheckCasterAuras() const
                     // That is needed when your casting is prevented by multiple states and you are only immune to some of them.
                     switch (aura->GetModifier()->m_auraname)
                     {
-                        
+
                         case SPELL_AURA_MOD_STUN:
                             if (!(mechanic_immune & (1 << (MECHANIC_STUN - 1u))))
                                 return SPELL_FAILED_STUNNED;
@@ -7126,7 +7126,7 @@ SpellCastResult Spell::CheckItems()
                     return SPELL_FAILED_NO_CHARGES_REMAIN;
 
         // World of Warcraft Client Patch 1.11.0 (2006-06-20)
-        // - Rejuvenation Potions: Any type of potion or consumable that grants 
+        // - Rejuvenation Potions: Any type of potion or consumable that grants
         //   mana and healing will no longer be consumable unless either your
         //   health or your mana are below maximum.
 #if SUPPORTED_CLIENT_BUILD > CLIENT_BUILD_1_10_2
@@ -8157,7 +8157,7 @@ public:
         }
     }
 
-#ifdef WIN32
+#ifdef _MSC_VER
     template<> void Visit(CorpseMapType &) {}
     template<> void Visit(GameObjectMapType &) {}
     template<> void Visit(DynamicObjectMapType &) {}
@@ -8165,7 +8165,7 @@ public:
 #endif
 };
 
-#ifndef WIN32
+#ifndef _MSC_VER
 template<> inline void SpellNotifierCreatureAndPlayer::Visit(CorpseMapType&) {}
 template<> inline void SpellNotifierCreatureAndPlayer::Visit(GameObjectMapType&) {}
 template<> inline void SpellNotifierCreatureAndPlayer::Visit(DynamicObjectMapType&) {}
@@ -8354,14 +8354,14 @@ void Spell::OnSpellLaunch()
             isCharge = true;
     if (!isCharge)
         return;
-        
+
     // Delay attack, otherwise player makes instant attack after cast
     if (m_caster->GetTypeId() == TYPEID_PLAYER)
     {
         m_caster->setAttackTimer(BASE_ATTACK, m_caster->getAttackTimer(BASE_ATTACK) + 200 + 40 * m_caster->GetDistance(unitTarget));
         m_caster->setAttackTimer(OFF_ATTACK,  m_caster->getAttackTimer(OFF_ATTACK)  + 200 + 40 * m_caster->GetDistance(unitTarget));
     }
-    
+
     bool triggerAutoAttack = unitTarget != m_caster && !IsPositiveSpell(m_spellInfo) && !(m_spellInfo->Attributes & SPELL_ATTR_STOP_ATTACK_TARGET);
     m_caster->GetMotionMaster()->MoveCharge(unitTarget, sWorld.getConfig(CONFIG_UINT32_SPELLS_CCDELAY), triggerAutoAttack);
 }

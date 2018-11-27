@@ -1,6 +1,6 @@
-/** 
+/**
   @file GMutex.h
-   
+
   @created 2005-09-22
   @edited  2009-03-25
  */
@@ -13,7 +13,7 @@
 #include "G3D/debugAssert.h"
 #include <string>
 
-#ifndef G3D_WIN32
+#ifndef _MSC_VER
 #include <unistd.h> // Nostalrius: pour la fonction usleep.
 #else
 #include <io.h>
@@ -22,6 +22,8 @@
 #ifndef G3D_WIN32
 #   include <pthread.h>
 #   include <signal.h>
+#else
+#   include <winbase.h>
 #endif
 
 
@@ -51,7 +53,7 @@ public:
         bool first = true;
         while (x.compareAndSet(0, 1) == 1) {
             first = false;
-#           ifdef G3D_WIN32
+#           ifdef _MSC_VER
                 Sleep(0);
 #           else
                 usleep(0);

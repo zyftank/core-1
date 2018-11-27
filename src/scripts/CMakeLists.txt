@@ -292,6 +292,11 @@ set (SCRIPTS_SRCS
 
 )
 
+if(WIN32)
+  if(NOT MSVC)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fpermissive")
+  endif()
+endif()
 
 # Used in game ScriptMgr, not need here
 list(REMOVE_ITEM SCRIPTS_SRCS ScriptLoader.cpp)
@@ -350,6 +355,14 @@ include_directories(
   ${ACE_INCLUDE_DIR}
   ${MYSQL_INCLUDE_DIR}
 )
+
+if(WIN32)
+  if(NOT MSVC)
+    include_directories(
+      ${MINGW_THREADS_INCLUDE_DIR}
+    )
+  endif()
+endif()
 
 # Enable precompiled headers when using the GCC compiler.
 if (PCH)

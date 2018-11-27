@@ -24,6 +24,10 @@
 #   include <CoreServices/CoreServices.h>
 #endif
 
+#ifdef G3D_WIN32
+#    include <WinDef.h>
+#endif
+
 namespace G3D {
 
 /**

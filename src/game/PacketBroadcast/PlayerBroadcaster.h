@@ -11,6 +11,10 @@
 #include <vector>
 #include <cstddef>
 
+#ifdef __MINGW32__
+#include "mingw.mutex.h"
+#endif
+
 class MovementBroadcaster;
 class Player;
 

@@ -160,6 +160,7 @@ set (game_SRCS
     Maps/InstanceData.cpp
     Maps/Map.cpp
     Maps/MapManager.cpp
+    Maps/MapReference.cpp
     Maps/MapPersistentStateMgr.cpp
     Maps/MoveMap.cpp
     Maps/PathFinder.cpp
@@ -341,7 +342,6 @@ set (game_SRCS
     Maps/MapManager.h
     Maps/MapPersistentStateMgr.h
     Maps/MapReference.h
-    Maps/MapReferenceImpl.h
     Maps/MapRefManager.h
     Maps/MoveMap.h
     Maps/MoveMapSharedDefines.h
@@ -429,7 +429,11 @@ set (game_SRCS
 
 if(WIN32)
   #allow exceptions in destructors
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Zc:implicitNoexcept-")
+  if(MSVC)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Zc:implicitNoexcept-")
+  else()
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fpermissive")
+  endif()
   set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /D__ACE_INLINE__")
 endif()
 
@@ -518,6 +522,14 @@ include_directories(
   ${TBB_INCLUDE_DIRS}
   ${ACE_INCLUDE_DIR}
 )
+
+if(WIN32)
+  if(NOT MSVC)
+    include_directories(
+      ${MINGW_THREADS_INCLUDE_DIR}
+    )
+  endif()
+endif()
 
 source_group("Object"
   REGULAR_EXPRESSION .*

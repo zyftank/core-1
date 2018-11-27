@@ -133,7 +133,9 @@ typedef ACE_UINT8 uint8;
 
 #if COMPILER != COMPILER_MICROSOFT
 typedef uint16      WORD;
+#ifndef __MINGW32__
 typedef uint32      DWORD;
+#endif
 #endif //COMPILER
 
 #if COMPILER == COMPILER_GNU

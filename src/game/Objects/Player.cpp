@@ -63,7 +63,7 @@
 #include "SocialMgr.h"
 #include "Mail.h"
 #include "WaypointMovementGenerator.h"
-#include "MapReferenceImpl.h"
+#include "MapReference.h"
 #include "GMTicketMgr.h"
 #include "MasterPlayer.h"
 
@@ -1344,7 +1344,7 @@ void Player::Update(uint32 update_diff, uint32 p_time)
     }
 
     // World of Warcraft Client Patch 1.11.0 (2006-06-20)
-    // - Release timers have been be removed from instances. This includes 
+    // - Release timers have been be removed from instances. This includes
     //   dungeons, battlegrounds, and raid instances.
 #if SUPPORTED_CLIENT_BUILD > CLIENT_BUILD_1_10_2
     // not auto-free ghost from body in instances
@@ -2848,7 +2848,7 @@ void Player::GiveLevel(uint32 level)
         data << uint32(int32(info.stats[i]) - GetCreateStat(Stats(i)));
 
     GetSession()->SendPacket(&data);
-    
+
     SetUInt32Value(PLAYER_NEXT_LEVEL_XP, sObjectMgr.GetXPForLevel(level));
 
     //update level, max level of skills
@@ -12404,7 +12404,7 @@ void Player::SendPreparedQuest(ObjectGuid guid)
                     int loc_idx = GetSession()->GetSessionDbLocaleIndex();
                     title = bct->GetText(loc_idx, pCreature->getGender(), false);
                 }
-                
+
             }
         }
         PlayerTalkClass->SendQuestGiverQuestList(qe, title, guid);
@@ -13129,7 +13129,7 @@ void Player::FailQuest(uint32 questId)
     if (Quest const* pQuest = sObjectMgr.GetQuestTemplate(questId))
     {
         uint16 log_slot = FindQuestSlot(questId);
-        
+
         if (pQuest->HasSpecialFlag(QUEST_SPECIAL_FLAG_REPEATABLE) && !pQuest->HasSpecialFlag(QUEST_SPECIAL_FLAG_TIMED))
         {
             SendQuestFailed(questId);
@@ -13736,7 +13736,7 @@ void Player::GroupEventFailHappens(uint32 questId)
         for (GroupReference* itr = pGroup->GetFirstMember(); itr != nullptr; itr = itr->next())
         {
             Player* pGroupGuy = itr->getSource();
-            
+
             // Fail regardless of distance
             if (pGroupGuy && pGroupGuy->GetQuestStatus(questId) == QUEST_STATUS_INCOMPLETE)
                 pGroupGuy->FailQuest(questId);
@@ -13985,7 +13985,7 @@ void Player::TalkedToCreature(uint32 entry, ObjectGuid guid)
 
         if (q_status.m_status == QUEST_STATUS_INCOMPLETE)
         {
-            if (qInfo->HasSpecialFlag(QuestSpecialFlags(QUEST_SPECIAL_FLAG_KILL_OR_CAST | QUEST_SPECIAL_FLAG_SPEAKTO)) 
+            if (qInfo->HasSpecialFlag(QuestSpecialFlags(QUEST_SPECIAL_FLAG_KILL_OR_CAST | QUEST_SPECIAL_FLAG_SPEAKTO))
                 && !qInfo->HasSpecialFlag(QuestSpecialFlags(QUEST_SPECIAL_FLAG_EXPLORATION_OR_EVENT)))
             {
                 for (int j = 0; j < QUEST_OBJECTIVES_COUNT; ++j)
@@ -14689,7 +14689,7 @@ bool Player::LoadFromDB(ObjectGuid guid, SqlQueryHolder *holder)
             }
             else if (GetMapId() == 533) // Naxxramas
             {
-                // There exist no exit areatrigger for Naxxramas. Not sure how Blizzard handled this in 
+                // There exist no exit areatrigger for Naxxramas. Not sure how Blizzard handled this in
                 // the original version of Naxx, but to keep the usual logic of being TPed outside the instance
                 // we have the following special-case. Using areatriggers is not possible without even uglier hacking
                 // as sObjectMgr.GetGoBackTrigger() requires the areatrigger to exist in the DBC files, not just in the DB
@@ -15066,7 +15066,7 @@ void Player::UpdateOldRidingSkillToNew(bool has_epic_mount)
 
     if (!has_old_riding_skill)
         return;
-    
+
     if (has_epic_mount)
         learnSpell(33391u, false); // Journeyman Riding
     else
@@ -17798,7 +17798,7 @@ bool Player::BuyItemFromVendor(ObjectGuid vendorGuid, uint32 item, uint8 count, 
 
     VendorItemData const* vItems = pCreature->GetVendorItems();
     VendorItemData const* tItems = pCreature->GetVendorTemplateItems();
-    
+
     if ((!vItems || vItems->Empty()) && (!tItems || tItems->Empty()))
     {
         SendBuyError(BUY_ERR_CANT_FIND_ITEM, pCreature, item, 0);
@@ -20255,7 +20255,7 @@ void Player::SetHomebindToLocation(WorldLocation const& loc, uint32 area_id)
                                m_homebindMapId, m_homebindAreaId, m_homebindX, m_homebindY, m_homebindZ, GetGUIDLow());
 }
 
-bool Player::TeleportToHomebind(uint32 options, bool hearthCooldown) 
+bool Player::TeleportToHomebind(uint32 options, bool hearthCooldown)
 {
     UpdatePvPContested(false, true);
     if (hearthCooldown)

@@ -19,23 +19,24 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef _MAPREFERENCE_H
-#define _MAPREFERENCE_H
-
-#include "Utilities/LinkedReference/Reference.h"
 #include "Map.h"
+#include "MapReference.h"
 
-class MapReference : public Reference<Map, Player>
+void MapReference::targetObjectBuildLink()
 {
-    protected:
-        void targetObjectBuildLink() override;
-        void targetObjectDestroyLink() override;
-        void sourceObjectDestroyLink() override;
+    // called from link()
+    getTarget()->m_mapRefManager.insertFirst(this);
+    getTarget()->m_mapRefManager.incSize();
+}
+void MapReference::targetObjectDestroyLink()
+{
+    // called from unlink()
+    if (isValid())
+        getTarget()->m_mapRefManager.decSize();
+}
+void MapReference::sourceObjectDestroyLink()
+{
+    // called from invalidate()
+    getTarget()->m_mapRefManager.decSize();
+}
 
-    public:
-        MapReference() : Reference<Map, Player>() {}
-        ~MapReference() { unlink(); }
-        MapReference *next() { return (MapReference*)Reference<Map, Player>::next(); }
-        MapReference const *next() const { return (MapReference const*)Reference<Map, Player>::next(); }
-};
-#endif
