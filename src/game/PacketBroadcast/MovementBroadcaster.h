@@ -14,6 +14,7 @@
 #include <cstddef>
 
 class PlayerBroadcaster;
+class MovementBroadcaster;
 
 class MovementBroadcasterWorker : public ACE_Based::Runnable
 {
