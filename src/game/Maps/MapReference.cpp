@@ -15,7 +15,7 @@
  */
  
 #include "MapReference.h"
-
+#include "Map.h"
 
 void MapReference::targetObjectBuildLink()
 {

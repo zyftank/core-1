@@ -23,9 +23,11 @@
 #define _MAPREFERENCE_H
 
 #include "Utilities/LinkedReference/Reference.h"
-#include "Map.h"
 
-class MANGOS_DLL_SPEC MapReference : public Reference<Map, Player>
+class Map;
+class Player;
+
+class MapReference : public Reference<Map, Player>
 {
     protected:
         void targetObjectBuildLink() override;
