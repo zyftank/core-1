@@ -1452,9 +1452,6 @@ class MANGOS_DLL_SPEC Player final: public Unit
 
         std::vector<ItemSetEffect*> m_ItemSetEff;
 
-        void SetLastCastedSpell(uint32 spell_id, bool byclient);
-        uint32 GetLastCastedSpell(bool byclientonly);
-
         /*********************************************************/
         /***                   TALENT SYSTEM                   ***/
         /*********************************************************/
@@ -1493,10 +1490,12 @@ class MANGOS_DLL_SPEC Player final: public Unit
         bool m_canDualWield;
         float m_ammoDPS;
         float m_personalXpRate;
+        uint32 m_foodEmoteTimer;
 
         void RegenerateAll();
         void Regenerate(Powers power);
         void RegenerateHealth();
+        void HandleFoodEmotes(uint32 diff);
 
         static float GetHealthBonusFromStamina(float stamina);
         static float GetManaBonusFromIntellect(float intellect);
@@ -1823,7 +1822,7 @@ class MANGOS_DLL_SPEC Player final: public Unit
 
         bool IsInVisibleList(WorldObject const* u) const;
         bool IsInVisibleList_Unsafe(WorldObject const* u) const { return this == u || m_visibleGUIDs.find(u->GetObjectGuid()) != m_visibleGUIDs.end(); }
-        bool IsVisibleInGridForPlayer(Player* pl) const;
+        bool IsVisibleInGridForPlayer(Player const* pl) const override;
         bool IsVisibleGloballyFor(Player* pl) const;
         void UpdateVisibilityOf(WorldObject const* viewPoint, WorldObject* target);
         template<class T>
@@ -2452,7 +2451,7 @@ class MANGOS_DLL_SPEC Player final: public Unit
         Player* GetNextRandomRaidMember(float radius);
         PartyResult CanUninviteFromGroup(ObjectGuid uninvitedGuid) const;
         void UpdateGroupLeaderFlag(const bool remove = false);
-        bool IsGroupVisibleFor(Player* p) const;
+        bool IsGroupVisibleFor(Player const* p) const;
         bool IsInSameGroupWith(Player const* p) const;
         bool IsInSameRaidWith(Player const* p) const { return p == this || (GetGroup() != nullptr && GetGroup() == p->GetGroup()); }
         void UninviteFromGroup();

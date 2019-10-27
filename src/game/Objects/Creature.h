@@ -69,6 +69,7 @@ enum CreatureFlagsExtra
     CREATURE_FLAG_EXTRA_NO_TARGET                    = 0x00020000,       // creature does not acquire targets
     CREATURE_FLAG_EXTRA_ONLY_VISIBLE_TO_FRIENDLY     = 0x00040000,       // creature can only be seen by friendly units
     CREATURE_FLAG_EXTRA_PVP                          = 0x00080000,       // creature has pvp unit flag set by default
+    CREATURE_FLAG_EXTRA_CAN_ASSIST                   = 0x00100000,       // CREATURE_TYPEFLAGS_CAN_ASSIST from TBC
 };
 
 // GCC have alternative #pragma pack(N) syntax and old gcc version not support pack(push,N), also any gcc version not support it at some platform
@@ -166,16 +167,6 @@ struct CreatureInfo
     }
 
     ObjectGuid GetObjectGuid(uint32 lowguid) const { return ObjectGuid(GetHighGuid(), entry, lowguid); }
-
-    SkillType GetRequiredLootSkill() const
-    {
-        if(type_flags & CREATURE_TYPEFLAGS_HERBLOOT)
-            return SKILL_HERBALISM;
-        if(type_flags & CREATURE_TYPEFLAGS_MININGLOOT)
-            return SKILL_MINING;
-        return SKILL_SKINNING;
-        // normal case
-    }
 
     bool isTameable() const
     {
@@ -590,8 +581,6 @@ class MANGOS_DLL_SPEC Creature : public Unit
             return GetCreatureInfo()->rank == CREATURE_ELITE_WORLDBOSS;
         }
 
-        uint32 GetLevelForTarget(Unit const* target) const override; // overwrite Unit::GetLevelForTarget for boss level support
-
         bool IsInEvadeMode() const;
 
         bool AIM_Initialize();
@@ -708,7 +697,7 @@ class MANGOS_DLL_SPEC Creature : public Unit
         Cell const& GetCurrentCell() const { return m_currentCell; }
         void SetCurrentCell(Cell const& cell) { m_currentCell = cell; }
 
-        bool IsVisibleInGridForPlayer(Player* pl) const override;
+        bool IsVisibleInGridForPlayer(Player const* pl) const override;
 
         void RemoveCorpse();
         bool IsDeadByDefault() const { return m_isDeadByDefault; };
@@ -915,6 +904,7 @@ class MANGOS_DLL_SPEC Creature : public Unit
 
         void SetEscortable(bool escortable) { _isEscortable = escortable; }
         bool IsEscortable() const { return _isEscortable; }
+        bool CanAssistPlayers() { return GetCreatureInfo()->flags_extra & CREATURE_FLAG_EXTRA_CAN_ASSIST; }
 
         bool CanSummonGuards() { return GetCreatureInfo()->flags_extra & CREATURE_FLAG_EXTRA_SUMMON_GUARD; }
 
